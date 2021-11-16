@@ -41,20 +41,21 @@ Next we have the contents that are scraped from the websites:
   "extras": {}
 
 ```
-```
-"title": is the actual title of the article that is parsed from the desired website.
 
-"content": contains all the content of the article. This field is stripped from any type of `html code`.
+`title`: is the actual title of the article that is parsed from the desired website.
 
-"link": is the link of the article itself. If it is paste on a browser it will redirect you to the actual article.
+`content`: contains all the content of the article. This field is stripped from any type of `html code`.
 
-"pubDate": is the date where the article was published. The date is in milliseconds format.
+`link`: is the link of the article itself. If it is paste on a browser it will redirect you to the actual article.
 
-"attachments": is an array containing all the links offered from the article.
+`pubDate`: is the date where the article was published. The date is in milliseconds format.
 
-"categories": is an array of the categories where the article is stored.
+`attachments`: is an array containing all the links offered from the article.
 
-"extras": in this field are stored all the extra information that are not belong to the other fields. Fields like `categories` where the `article` belongs or the `links` the are embed are the content of the article like pdf files or redirect links. 
+`categories`: is an array of the categories where the article is stored.
+
+`extras`: in this field are stored all the extra information that are not belong to the other fields. Fields like `categories` where the `article` belongs or the `links` the are embed are the content of the article like pdf files or redirect links. 
+
 
 See also: [What each parser puts to extras](https://saffron.poiw.org/en/parsers)
 
