@@ -19,6 +19,7 @@ Each source file need some basic information regardless the selected parser.
   "name": "example",
   "collection_name": "",
   "url": "https://example.com",
+  "ignoreCertificates": false,
   "type": "html",
   "scrapeInterval": 3600
   "retryInterval": 1800,
@@ -38,6 +39,7 @@ Each source file need some basic information regardless the selected parser.
   ```
   The `alias` must be at position zero (0) and the `url` at position one (1). Neither of them cannot be empty. The `alias` is stored in the `extras` field of the article. The `wordpress` parser does not support multiple urls.
   See also: [Article contents](https://saffron.poiw.org/en/article)
+* `ignoreCertificates`: If a website has expired certificate and it is set to false, then it will throw parsing error.
 * `type`: Can be "html", "rss", "wordpress" and "custom". This field decides which parser to use.
 * `scrapeInterval`: The interval in milliseconds between the scraping jobs.
 * `retryInterval`: In case the first scraping fails, when to try again (in milliseconds).
