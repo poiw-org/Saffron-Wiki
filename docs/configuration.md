@@ -55,7 +55,7 @@ This field is necessary only `mode`: main (check below).
 "workers": {
   "nodes": 1,
   "job": {
-    "timeout": 5000
+    "requestTimeout": 5000
   }
 },
 ```
