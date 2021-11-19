@@ -17,6 +17,8 @@ Below is a list of all the events:
 // The names of all the validated sources (without the excluded).
 saffron.on("scheduler.sources.new", (names: string[]) => ...)
 
+// A error occurred during source file parsing.
+saffron.on("scheduler.job.new", (sourceFile: any, error: any) => ...)
 // A new job ha been put on stack.
 saffron.on("scheduler.job.new", (job: Job) => ...)
 // The time for the job to be runned has come.
