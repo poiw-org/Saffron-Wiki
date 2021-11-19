@@ -33,20 +33,18 @@ Each saffron instance need a configuration file. Below is the structure of the c
     * memory: No extra configuration needed.
     * none: No extra configuration needed (The articles will not be saved in any form of database).
 
-
-
 ### Source files
 This field is necessary only `mode`: main (check below).
 ```json
 "sources":{
-  "path": "./sources" // The default path
+  "path": "./sources", // The default path
+  "includeOnly": [],
   "excluded": []
 }
 ```
 * `path` is the source file folder path.
-* `excluded` is an array that will exclud the sources based on their name.
-
-
+* `includeOnly` is an array that will includeOnly selected sources based on their name.
+* `excluded` is an array that will exclude the sources based on their name. It will still exclude articles if they match with items in `includeOnly` field.
 
 ### Mode and workers
 
