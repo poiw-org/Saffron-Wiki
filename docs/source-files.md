@@ -24,7 +24,8 @@ Each source file need some basic information regardless the selected parser.
   "scrapeInterval": 3600
   "retryInterval": 1800,
   "requestTimeout": 5000,
-  "scrape": {}
+  "extra: "".
+  "scrape": {},
 }
 ```
 * `name`: The name of the source file. Warning, this field is used for connecting the articles with the website, changing it, is the same as discarding all the old articles. Also assigning two source files the same name is prohibited and will cause the scheduler to malufanction.
@@ -44,6 +45,7 @@ Each source file need some basic information regardless the selected parser.
 * `scrapeInterval`: The interval in milliseconds between the scraping jobs.
 * `retryInterval`: In case the first scraping fails, when to try again (in milliseconds).
 * `requestTimeout`: The request timeout for the specific source
+* `extra`: Put extra data not related to saffron, can be any type, string, object, arrays etc.
 * `scrape`: Contains all the scrape options for the parsers.
 
 Each parser has its own scrape format.
