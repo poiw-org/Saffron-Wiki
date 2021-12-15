@@ -68,14 +68,14 @@ This option will exclude sources from `includeOnly` if it is set.
 
 ## Scheduler
 
-### `intervalBetweenJobs`
+### `jobsInterval`
 Default value: `3600000` (60 minutes)
 
 The default interval between the source scrapping jobs (it can be overwritten for each source).
 This option is also used by the scheduler to spread the source files evenly inside a specific timeframe.
 
 :::caution
-The value should not be lower than `intervalBetweenChecks`.
+The value should not be lower than `checksInterval`.
 :::
 
 ### `heavyJobFailureInterval`
@@ -84,7 +84,7 @@ Default value: `86400000` (24 hours)
 There are cases where a source scrapping job will continuously fail (website is down).
 After `10` continuous fail attempts it will freeze the job and schedule it after `heavyJobFailureInterval` ms.
 
-### `intervalBetweenChecks`
+### `checksInterval`
 Default value: `120000` (2 minutes)
 
 The scheduler checks periodically to find if a source scrapping job has finished or failed.
@@ -104,7 +104,7 @@ Default value: `10000`
 
 The source scrapping job request timeout (it can be overwritten for each source).
 
-### `jobs.amount`
+### `articles.amount`
 Default value: `10`
 
 The amount of articles that will be parsed for each source scrapping job.
@@ -145,13 +145,15 @@ let oonfig = {
         nodes: 1,
         jobs: {
             timeout: 10000,
+        },
+        articles: {
             amount: 10
         }
     },
     scheduler: {
         intervalBetweenJobs: 3600000,
         heavyJobFailureInterval: 86400000,
-        intervalBetweenChecks: 120000
+        checksInterval: 120000
     },
     grid: {
         distributed: false

@@ -4,45 +4,142 @@ editor: markdown
 sidebar_position: 1
 ---
 
-# Source Files
+## What is a source file?
 
-`Saffron` can parse any desired website as long as it has the appropriate source file. The source files by default are placed at the project root directory in the `sources/` folder. If the source files are placed in a different folder, then pass down to source folder `path` to configuration. The source files file format is `.json`.
+A source file is a `json` or `javascript` file. These files are generated from the user and help Saffron to parse news from the desired websites.
+Therefor each source file represents a website.
+Each parser utilizes a different source file structure but there are some common options.
 
-If a source file fails to meet the below criteria, it will be skipped and log an install error.
+## Options
 
-Each source file need some basic information regardless the selected parser.
+### `name`
+Default value: none
+
+This option identifies the source file. It is also used in configuration [`includeOnly`](../configuration#includeonly)
+and [`exclude`](../configuration#exclude). It must be unique for each source file.
+
+### `tableName`
+Default value: none (optional)
+
+Saffron implements a variety of database drivers. Either it is SQL or not. This option allows the database to know in which
+table (sql) or collection (no-sql) to store the articles. If it is not specified, the `name` will be used in its place.
+
+### `interval`
+Default value: `3600000` (optional)
+
+The interval where a source scrapping job will be generated for the source file.
+
+:::info
+This option will override the configuration option [`jobsInterval`](../configuration#jobsInterval)
+:::
+
+### `retryInterval`
+Default value: `jobsInterval / 2` (optional)
+
+The interval where a source scrapping job will be reissued in case of failure. If it not set it will take
+the configuration's option [`jobsInterval`](../configuration#jobsInterval) and divide it by two.
+
+### `timeout`
+Default value: `10000` (optional)
+
+The timeframe where Saffron will wait to get a response from an url. If this amount is exceeded it will throw a parser error.
+
+:::info
+This option will override the configuration option [`jobs.timeout`](../configuration#jobstimeout)
+:::
+
+### `amount`
+Default value: `10` (optional)
+
+The amount of articles will parse from an url.
+
+:::info
+This option will override the configuration option [`articles.amount`](../configuration#articlesamount)
+:::
+
+### `ignoreCertificates`
+Default value: `false` (optional)
+
+If is set to `true` it will ignore expired TLS certificates. In that case the program will not be protected
+against man in the middle attacks.
+
+
+### `extra`
+Default value: none (optional)
+
+This field was created mainly for analytic purposes. It allows the user to pass any kind of information inside that field.
+The field can then be accessed later through an article instance using the call `article.getSource().extra`
+
+
+### `url`
+Default value: none
+
+This field contains the url(s) where the news are displayed. It can be a string or an array.:
+
+In case of one url it can be used like:
+
+```js
+url: "https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr"
+//or
+url: ["https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr"]
+//or
+url: [["https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr"]]
+```
+
+In case a website has more than one sub-sites where it displays its news, multiple urls can be used.
+In that case the `scrape` options will be applied to all the urls, and it can be used like:
+
+```js
+url: [
+    "https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr",
+    "https://www.csd.uoc.gr/index.jsp?content=announcements&openmenu=demoAcc6&lang=gr"
+]
+//or
+url: [
+    ["https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr"],
+    ["https://www.csd.uoc.gr/index.jsp?content=announcements&openmenu=demoAcc6&lang=gr"]
+]
+```
+
+If you want to identify in which url an article was found you can use the category option before the url.
+It will add that category alongside the provided url at the `categories` field of the article.
+
+```js
+url: [
+    ["News", "https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr"],
+    ["Annoucements", "https://www.csd.uoc.gr/index.jsp?content=announcements&openmenu=demoAcc6&lang=gr"]
+]
+```
+
+### `type`
+Default value: none
+
+The type of parser that will be used during the scrapping. For more details read about [parsers](../05_parsers/01_intro.md).
+
+
+### `scrape`
+Default value: none
+
+This field contains all the scrape options needed by the specified parser. You can check the options needed for each parser
+by clicking the parser you want to use: [WordPress](./02_wordpress.md), [RSS](./03_rss.md), [HTML](./04_html.md) or [Dynamic](./05_dynamic.md).
+
+## Example
+
 ```json
 {
-  "name": "example",
-  "collection_name": "",
-  "url": "https://example.com",
+  "name": "csd.uoc.gr",
+  "tableName": "csd.uoc.gr",
+  "interval": 3600000,
+  "retryInterval": 1800000,
+  "timeout": 10000,
+  "amount": 10,
   "ignoreCertificates": false,
+  "extra": {},
+  "url":  [
+    "https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr",
+    "https://www.csd.uoc.gr/index.jsp?content=announcements&openmenu=demoAcc6&lang=gr"
+  ],
   "type": "html",
-  "scrapeInterval": 3600
-  "retryInterval": 1800,
-  "requestTimeout": 5000,
-  "extra: "".
-  "scrape": {},
+  "scrape": {}
 }
 ```
-* `name`: The name of the source file. Warning, this field is used for connecting the articles with the website, changing it, is the same as discarding all the old articles. Also assigning two source files the same name is prohibited and will cause the scheduler to malufanction.
-* `collection_name`: The collection name where the articles of this source files will be stored. If it is not defined it will take the `name` field.
-* `url`: The url where the articles are displayed. In case there are multiple urls for the same scrape format, change the url to an array containing arrays of `alias` / `url`.
-  ```json
-	"url": [
-    ["alias1", "url1"],
-    ["alias2", "url2"],
-    ...
-  ]
-  ```
-  The `alias` must be at position zero (0) and the `url` at position one (1). Neither of them cannot be empty. The `alias` is stored in the `extras` field of the article. The `wordpress` parser does not support multiple urls.
-  See also: [Article contents](https://saffron.poiw.org/en/article)
-* `ignoreCertificates`: If a website has expired certificate and it is set to false, then it will throw parsing error.
-* `type`: Can be "html", "rss", "wordpress" and "custom". This field decides which parser to use.
-* `scrapeInterval`: The interval in milliseconds between the scraping jobs.
-* `retryInterval`: In case the first scraping fails, when to try again (in milliseconds).
-* `requestTimeout`: The request timeout for the specific source
-* `extra`: Put extra data not related to saffron, can be any type, string, object, arrays etc.
-* `scrape`: Contains all the scrape options for the parsers.
-
-Each parser has its own scrape format.

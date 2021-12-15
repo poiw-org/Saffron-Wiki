@@ -122,7 +122,7 @@ Arguments: `(job: Job)`
 It is called when a worker has finished a source scrapping job.
 
 :::info
-Note there may be a max of `intervalBetweenChecks` ms timeframe with the `scheduler.job.finished` event.
+Note there may be a max of `checksInterval` ms timeframe with the `scheduler.job.finished` event.
 :::
 
 ### `workers.job.failed`
@@ -131,7 +131,7 @@ Arguments: `(job: Job)`
 It is called when a worker has failed a source scrapping job.
 
 :::info
-Note there may be a max of `intervalBetweenChecks` ms timeframe with the `scheduler.job.failed` event.
+Note there may be a max of `checksInterval` ms timeframe with the `scheduler.job.failed` event.
 :::
 
 ### `workers.articles.errorOffloading`

@@ -4,42 +4,104 @@ editor: markdown
 sidebar_position: 5
 ---
 
-## Dynamic parser
-Below is an example of the dynamic parser source file:
+## Template
+
+Unlike the other parse this parser uses javascript files, so the options described [here](./01_general.md) must be included
+inside the javascript file. Also, the dynamic parser uses a scrape function instead of scrape options.
+
+Below is a template for the dynamic parser source file:
 ```js
-const {types: {Article, Utils}} = require("../../dist/index")
-const utils = new Utils()
+const {types: {Article, Utils}} = require("@poiw/saffron")
+const utils = new Utils();
 
 module.exports = {
+    name: "csd.uoc.gr",
     type: "dynamic",
-  	...
-    scrape: async () => { }
+    // ...
+    scrape: async function () {
+        // Do your thing...
+    }
 }
-
 ```
 
-Unlike the other, the dynamic parser make use of a `javascript` source file instead of json.
-* `scrape` is an asynchronous function that will be called from the parser.
+## Starting
 
-* `Article` is a javascript class that will be used to store each article's information.
+First you have to import the `types` needed for generating an article and initialize the utils needed during the parsing.
+Then you can create a JavaScript object containing all the necessary fields for the source file to function.
 
-The constructor accepts two parameters:
-* A string type message, that describes the error
-* A boolean that can lock the source file. If a source file is locked it will not be parsed until 		it is manually unlocked.
+Second you create the `scrape` asynchronous function to write down code needed for scraping.
 
-* `utils` is a sum of functions and variables that will be used during the scrapping proccess.
-    * `isFirstScrape` a boolean type variable that returns if it the first time the source file is scrapped.
-    * `isScrapeAfterError` a boolean type variable that return if the last time the scrape returned 		 an `Exceptions` class.
-    * `getArticles(count)` a function that will return an array of the last `<count>` parsed 			        articles.
-    * `onNewArticle(article)` a function that will be used to add a new article to the stack.
-    * `url` a string type variable which containes the url that is passed from the source file.
+:::info
+Any extra libraries used here must be added to your `package.json` file.
+:::
 
-Frequently asked Questions:
-* **Can I create more functions outside of the already declared `scrape` function?**
-  You can't, the parser will only read the `scrape` function. On the other hand you can create private functions inside the scrape function:
+## Utils
+
+Utils provide a set of necessary functions and fields that will be useful during scrapping.
+
+### `isFirstScrape`
+Type: `field:boolean`
+
+This field will be set to true if there are no other articles in the database.
+
+### `isScrapeAfterError`
+Type: `field:boolean`
+
+This field will be set to true if the previous source scrapping job has failed.
+
+### `getArticles`
+Type: `function`
+
+This function will return a specified amount of articles that belong to the same source.
+The amount can be specified using the parameter `amount` and it can return up to 50 articles.
+If `amount` is a negative number, an exception will be thrown.
+
+:::info
+New articles added from [`onNewArticle`](#onnewarticle) will be pushed at the start of the array.
+:::
+
+### `onNewArticle`
+Type: `function`
+
+A function that enables you to store a new article. It takes as parameter the article that you want to save.
+If an error occurs during the scrapping, no articles will be saved at the database.
+
+### `url`
+Type: `field:string`
+
+This field contains the currently working url. There is no need to create support for multiple urls because we do it for you.
+
+### `parse`
+Type: `function:Article[]`
+
+Dynamic parser can utilize the functionality of the other parsers, by using the `parse` function and passing as
+parameter a source file's contents. In case of incorrect source file or failed parsing an `Exception` will be thrown.
+
+
+## Writing code
+
+### Nested functions
+
+The dynamic parser can only see the `scrape` function and not other functions.
+If you want to create separate functions you have to utilize them inside the `scrape` function.
+
 ```js
-const secondFunc = () => { ... }
+scrape: async () => {
+  const log = (message) => {
+    console.log(message);  
+  }
+  
+  log('This is the nested function.');
+}
 ```
-* **After I call the `onNewArticle` function will be the article available at the `getArticles` function?**
-  Yes, every time you call `onNewArticle` function the passed article is temporary saved and appended at the top of the already parsed articles. When the scraping is finished all the scraped articles will be added to the desired database.
 
+### Fail job
+
+In case you want to mark the scrapping a failed and return no articles then you have to throw an `Error`.
+
+```js
+scrape: async () => {
+    // ...
+    throw new Error("Parsing failed.");
+}
+```
