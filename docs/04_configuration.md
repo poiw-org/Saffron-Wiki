@@ -124,7 +124,7 @@ If `mode` is set to `worker` it will search for the `main` grid.
 ### `log`
 Default value: `all`
 
-The saffron log level. Can be set as `all` or `none`.
+The saffron log level. Can be set as `all`, `info`, `errors` or `none`.
 
 
 ## Example
@@ -138,7 +138,7 @@ let oonfig = {
     sources: {
         path: "./sources",
         includeOnly: [],
-        excluded: []
+        exclude: []
     },
     mode: "main",
     workers: {
@@ -151,7 +151,7 @@ let oonfig = {
         }
     },
     scheduler: {
-        intervalBetweenJobs: 3600000,
+        jobsInterval: 3600000,
         heavyJobFailureInterval: 86400000,
         checksInterval: 120000
     },

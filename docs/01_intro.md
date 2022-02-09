@@ -22,6 +22,11 @@ implementation and in app encryption system, the communication is end to end saf
 
 ## Versions
 
+### 2.1.0
+* New features
+  * Added event listeners `middleware.before` & `middleware.after`
+  * Added log levels `info` & `errors`
+
 ### 2.0.0
 
 * Changes

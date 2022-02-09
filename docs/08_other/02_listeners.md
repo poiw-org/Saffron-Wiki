@@ -148,12 +148,27 @@ found articles from the website and the sourceName.
 ### `workers.articles.new`
 Arguments: `(articles: Article[])`
 
-It is called after middleware is called. It gives as parameters the new articles that will be uploaded to the database.
+It is called after saffron has checked with previous articles stored in the database.
+It gives as parameters the new articles that will be uploaded to the database.
 
 ### `workers.parsers.error`
 Arguments: `(error: any)`
 
 It is called if a source scraping job has failed.
+
+
+## Middleware
+
+### `middleware.before`
+Arguments: `(articles: Article[])`
+
+It is called before middlewares are applied and after `workers.articles.found`. The difference between
+the two is that `middleware.before` will not be called in case of zero articles.
+
+### `middleware.after`
+Arguments: `(articles: Article[])`
+
+It is called after middlewares are applied and before `workers.articles.new`.
 
 
 ## Catch All
