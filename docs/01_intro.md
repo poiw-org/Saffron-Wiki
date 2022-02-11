@@ -7,9 +7,16 @@ sidebar_position: 1
 
 **Saffron | News & announcements aggregation framework**
 
+**S**imple **A**bstract **F**ramework **F**or the **R**etrieval **O**f **N**ews
+
+Status: Beta
+
 The project is maintained by [po/iw](https://poiw.org) (ποιώ), a Greek university team that supports Free/Libre
 and Open Source Software and hardware. Saffron was built to help teams collect and compile huge lists of aggregated
 news and announcement content intuitively and efficiently.
+
+## What is this?
+Saffron is an abstraction engine that helps you collect news and announcements from websites in a uniform way. All you have to do is write a file for each website you want to be scraped and run it in your NodeJS app. Saffron manages the scraping interval, data parsing and - if you want to - the data offloading to your database of choice.
 
 ## Architecture
 
@@ -40,4 +47,4 @@ implementation and in app encryption system, the communication is end to end saf
 
 ### 1.x.x
 
-Version `1.x.x` was created for test purposes, and it is unstable. It recommended using any version above `2.0.0`.
+Version `1.x.x` was created for test purposes, and it is quite unstable. It is recommended that you're using any version above `2.0.0`.
