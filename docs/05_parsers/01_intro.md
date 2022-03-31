@@ -8,8 +8,8 @@ sidebar_position: 1
 To retrieve the desired information from the websites we use parsers.
 There are four available parser types: `wordpress`, `rss`, `html` and `dynamic`.
 
-## WordPress
-Parser type: `wordpress`
+## WordPress V2
+Parser type: `wordpress-v2`
 
 By default, [`WordPress`](https://wordpress.com/) based websites has an open API for news retrieval.
 We make use of that to get access on the posts and categories of the website.
@@ -23,7 +23,7 @@ then you can safely use the `wordpress` parser.
 Parser type: `rss`
 
 Many websites support [`RSS`](https://en.wikipedia.org/wiki/RSS) feed. RSS allows users and applications to access updates
-to websites in a standardized, computer-readable format. You can check if a website supports RSS if ou find this
+to websites in a standardized, computer-readable format. You can check if a website supports RSS if you can see this
 icon <img src="/img/rss.png" width="20" height="20" />.
 
 

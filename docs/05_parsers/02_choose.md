@@ -8,7 +8,7 @@ We recommend a specific order for using the available parsers.
 
 **First**
 
-If the desired website is based an [`WordPress`](https://wordpress.com/) and the WordPress Posts API is enabled, then choose the `wordpress` parser.
+If the desired website is based an [`WordPress`](https://wordpress.com/) and the WordPress Posts API is enabled, then choose the `wordpress-v2` parser (or `wordpress-v1` if it is that old).
 
 **Second**
 
