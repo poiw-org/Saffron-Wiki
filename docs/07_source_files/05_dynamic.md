@@ -11,25 +11,30 @@ inside the javascript file. Also, the dynamic parser uses a scrape function inst
 
 Below is a template for the dynamic parser source file:
 ```js
-const {types: {Article, Utils}} = require("@poiw/saffron")
-const utils = new Utils();
-
 module.exports = {
     name: "csd.uoc.gr",
     type: "dynamic",
     // ...
-    scrape: async function () {
+    scrape: async function (utils, Article) {
         // Do your thing...
+        
+        const article = new Article();
+        article.title = '';
+        // ...
+        
+        if(error)
+            throw new Error('Failed for csd.uoc.gr!');
+        
+        return articles;
     }
 }
 ```
 
 ## Starting
 
-First you have to import the `types` needed for generating an article and initialize the utils needed during the parsing.
-Then you can create a JavaScript object containing all the necessary fields for the source file to function.
-
-Second you create the `scrape` asynchronous function to write down code needed for scraping.
+Create the `scrape` asynchronous function to write down code needed for scraping.
+Saffron will ignore the rest of the file when it comes to scrapping so
+all code must be included inside the scrape function, such as imports user-defined functions etc.
 
 :::info
 Any extra libraries used here must be added to your `package.json` file.
@@ -37,71 +42,104 @@ Any extra libraries used here must be added to your `package.json` file.
 
 ## Utils
 
-Utils provide a set of necessary functions and fields that will be useful during scrapping.
-
-### `isFirstScrape`
-Type: `field:boolean`
-
-This field will be set to true if there are no other articles in the database.
+Utils provide a set of necessary functions and fields that are used by all scrappers
+and will be needed for you to.
 
 ### `isScrapeAfterError`
-Type: `field:boolean`
-
-This field will be set to true if the previous source scrapping job has failed.
-
-### `getArticles`
-Type: `function`
-
-This function will return a specified amount of articles that belong to the same source.
-The amount can be specified using the parameter `amount` and it can return up to 50 articles.
-If `amount` is a negative number, an exception will be thrown.
-
-:::info
-New articles added from [`onNewArticle`](#onnewarticle) will be pushed at the start of the array.
-:::
-
-### `onNewArticle`
-Type: `function`
-
-A function that enables you to store a new article. It takes as parameter the article that you want to save.
-If an error occurs during the scrapping, no articles will be saved at the database.
+A field that will return `true` if the previous job was a failure.
 
 ### `url`
-Type: `field:string`
+A field that contains the url that must be scrapped.
 
-This field contains the currently working url. There is no need to create support for multiple urls because we do it for you.
+### `aliases`
+A field that contains the categories passed alongside the url.
+You do not have to insert them to each article, saffron is doing
+this for you.
+
+### `instructions`
+A set of instructions. It is mainly used from other parsers and
+also contains the current scrape function at the `scrapeFunction` field as a string.
+
+### `amount`
+The maximum amount of articles that has to be returned.
+
+### `get`
+A middleware function for axios to do a `GET` request.
+
+### `post`
+A middleware function for axios to do a `POST` request.
+
+### `request`
+A middleware function for axios to do any kind of request.
 
 ### `parse`
-Type: `function:Article[]`
+A function that will get as its first parameter the contents
+of another source file and return the articles that was scrapped.
 
-Dynamic parser can utilize the functionality of the other parsers, by using the `parse` function and passing as
-parameter a source file's contents. In case of incorrect source file or failed parsing an `Exception` will be thrown.
+In case of incorrect source file or failed parsing an `Exception` will be thrown.
 
+This function will return an object array that contains the
+url, aliases and articles for each url specified at the
+nested source file.
+
+### `htmlStrip`
+A function that will strip a string of all html tags
+
+### 'extractLinks'
+A function that gets as its first parameter valid HTML code
+and returns an attachment array of the urls of the following tags:
+`a`, `img`, `link`.
 
 ## Writing code
 
-### Nested functions
-
-The dynamic parser can only see the `scrape` function and not other functions.
-If you want to create separate functions you have to utilize them inside the `scrape` function.
+### Nested functions & Imports
+Saffron will ignore the rest of the file when it comes to scrapping so
+all code must be included inside the scrape function, such as imports user-defined functions etc.
 
 ```js
-scrape: async () => {
+scrape: async (utils, Article) => {
   const log = (message) => {
     console.log(message);  
   }
   
-  log('This is the nested function.');
+  const other = require('other');
+  log('Using a nested function.');
+  // ...
+}
+```
+
+### Callbacks
+Dynamic parser does not utilize callbacks. If you want to use callbacks in your code you
+have to return a promise:
+
+```javascript
+scrape: (utils, Article) => {
+  return new Promise((resolve, reject) => {
+      utils.get(utils.url).then(response => {
+          // ...
+          
+          resolve(articles);
+      });
+  });
 }
 ```
 
 ### Fail job
 
-In case you want to mark the scrapping a failed and return no articles then you have to throw an `Error`.
+In case you want to mark the scrapping as failed and return no articles then you have to throw an `Error`:
 
 ```js
-scrape: async () => {
+scrape: async (utils, Article) => {
     // ...
     throw new Error("Parsing failed.");
+}
+```
+or reject the promise:
+```js
+scrape: async (utils, Article) => {
+    return new Promise((resolve, reject) => {
+        // ...
+        reject(new Error("Parsing failed."));
+    });
 }
 ```

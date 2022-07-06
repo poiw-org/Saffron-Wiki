@@ -16,31 +16,16 @@ Can receive the values `main` and `worker`. It specifies if the saffron instance
 or a worker only instance.
 
 ## Database
+The database functions that will be called from Saffron. They need to be initialized from the developer.
+Any kind of error thrown inside the database functions will be called by the Saffron and abort the uploading.
 
-### `driver`
-Default value: `none`
+### `pushArticles`
+Takes as argument an array of new articles that needs to be pushed in the database.
 
-The database driver where the parsed articles will be stored.
-The available drivers at the moment are: `none`, `memory` and `mongodb`.
-
-### `config`
-Default value: `{}`
-
-The needed configuration a database driver needs. The drivers `none` and `memory` do not require custom configuration.
-
-<Tabs groupdId="dbdriver">
-<TabItem value="mongodb" label="mongodb">
-
-```js
-let config = {
-    url: "MOGNO_URL",
-    name: "DATABASE_NAME"
-}
-```
-
-</TabItem>
-</Tabs>
-
+### `getArticles`
+Takes as argument an object containing the fields: `tableName`, `count`.
+* `tableName`: The table (or collection) where the articles will be retrieved
+* `count`: How many articles will be retrieved from the database.
 
 ## Sources
 
@@ -50,14 +35,10 @@ Default value: `./sources`
 The folder where the source files are located (will also search for sub folders).
 
 ### `includeOnly`
-Default value: `[]`
-
 This field was created mainly for test purposes when we want to include only specific sources.
 The source identification is made using the source name (not the source file name).
 
 ### `exclude`
-Default value: `[]`
-
 This field was created mainly for test purposes when we want to exclude specific sources.
 The source identification is made using the source name (not the source file name).
 
@@ -115,10 +96,28 @@ Default value: `false`
 
 If the grid network will be started or not.
 
-:::info
-If `mode` is set to `worker` it will search for the `main` grid.
-:::
+### `useHTTP`
+Default value: `false`
 
+Use HTTP instead of HTTPS.
+
+### `serverAddress`
+The server's address without the `http://` or `https://` prefix.
+The address is the same as the `main` node's address.
+
+### `serverPort`
+Default value: `3000`
+
+The port where the grid will listen.
+
+### `authToken`
+The token that will authenticate the `worker` nodes with the `main` node.
+
+### `key`
+The key used by the HTTPS server.
+
+### `cert`
+The certificate used by the HTTPS server.
 
 ## Misc
 ### `log`
@@ -126,40 +125,50 @@ Default value: `all`
 
 The saffron log level. Can be set as `all`, `info`, `errors` or `none`.
 
+# Environment
+Saffron supports different configuration based on the environment.
 
-## Example
-
-```js
-let oonfig = {
-    database: {
-        driver: "none",
-        config: {}
-    },
-    sources: {
-        path: "./sources",
-        includeOnly: [],
-        exclude: []
-    },
-    mode: "main",
-    workers: {
-        nodes: 1,
-        jobs: {
-            timeout: 10000,
+The configuration will first receive the root configuration:
+```javascript
+{
+    databsase: {
+        pushArticles: (articles) => {
+            // push to production database
         },
-        articles: {
-            amount: 10
-        }
+        // ...
     },
-    scheduler: {
-        jobsInterval: 3600000,
-        heavyJobFailureInterval: 86400000,
-        checksInterval: 120000
+    misc: {
+        log: "errors" // log only errors
     },
-    grid: {
-        distributed: false
+    // ...
+}
+```
+
+and then read the child object `development`, `production` or `testing` based on the environment:
+
+```javascript
+{
+    databsase: {
+        pushArticles: (articles) => {
+            // push to production database
+        },
+        // ...
     },
     misc: {
         log: "all"
+    },
+    // ...
+    development: {
+        databsase: {
+            pushArticles: (articles) => {
+                // push to local database
+            },
+            // ...
+        },
+        misc: {
+            log: "all" // log everything
+        },
+        // ...
     }
 }
 ```

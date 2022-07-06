@@ -6,74 +6,87 @@ sidebar_position: 1
 
 ## What is a source file?
 
-A source file is a `json` or `javascript` file. These files are generated from the user and help Saffron to parse news from the desired websites.
-Therefor each source file represents a website.
+A source file is a `json` or `javascript` file that represents a website.
+These files are generated from the user and guide Saffron on how to parse a website.
+
 Each parser utilizes a different source file structure but there are some common options.
 
-## Options
+## Common options
 
 ### `name`
-Default value: none
+This field identifies the source file.
+Although saffron does not check if the name is unique it is required to be so.
 
-This option identifies the source file. It is also used in configuration [`includeOnly`](../configuration#includeonly)
-and [`exclude`](../configuration#exclude). It must be unique for each source file.
+It is also used in configuration [`includeOnly`](../configuration#includeonly)
+and [`exclude`](../configuration#exclude).
 
 ### `tableName`
-Default value: none (optional)
+Default value: [`name`](#name)
 
-Saffron implements a variety of database drivers. Either it is SQL or not. This option allows the database to know in which
-table (sql) or collection (no-sql) to store the articles. If it is not specified, the `name` will be used in its place.
+When requesting (or saving) articles from (to) the database, saffron will send the tableName as the path
+to where the articles are located. This is useful in case of multiple source files want to save
+at the same place.
+
+If it is not defined it will fallback to the source name field.
 
 ### `interval`
-Default value: `3600000` (optional)
+Default value: `3600000`
 
-The interval where a source scrapping job will be generated for the source file.
+The time the between the jobs that are issued for this source file.
+For example, if it is scrapped at `4 AM` then the next job will be issued for `5 AM`.
+
+Make note that saffron will add an offset of maximum `500` seconds.
 
 :::info
-This option will override the configuration option [`jobsInterval`](../configuration#jobsInterval)
+This option will override the configuration option [`scheduler.jobsInterval`](../configuration#jobsInterval)
 :::
 
 ### `retryInterval`
-Default value: `jobsInterval / 2` (optional)
+Default value: `configuration.scheduler.jobsInterval / 2`
 
-The interval where a source scrapping job will be reissued in case of failure. If it not set it will take
-the configuration's option [`jobsInterval`](../configuration#jobsInterval) and divide it by two.
+The interval where a source scrapping job will be reissued in case of failure.
 
 ### `timeout`
-Default value: `10000` (optional)
+Default value: `configuration.workers.jobs.timeout`
 
-The timeframe where Saffron will wait to get a response from an url. If this amount is exceeded it will throw a parser error.
+The timeframe where Saffron will wait to get a response from an url.
+If this amount is exceeded it will throw a parser error.
 
 :::info
 This option will override the configuration option [`jobs.timeout`](../configuration#jobstimeout)
 :::
 
 ### `amount`
-Default value: `10` (optional)
+Default value: `configuration.workers.articles.amount`
 
-The amount of articles will parse from an url.
+The amount of articles a parser will return.
 
 :::info
 This option will override the configuration option [`articles.amount`](../configuration#articlesamount)
 :::
 
 ### `ignoreCertificates`
-Default value: `false` (optional)
+Default value: `false`
 
-If is set to `true` it will ignore expired TLS certificates. In that case the program will not be protected
-against man in the middle attacks.
+If is set to `true` it will ignore all TLS certificates. It is useful in cases where a website
+did not update their certificates.
 
 
 ### `extra`
-Default value: none (optional)
+This field will stay intact with whatever you put inside.
+It allows the user to pass custom information about the source file.
+It can be used like this:
 
-This field was created mainly for analytic purposes. It allows the user to pass any kind of information inside that field.
-The field can then be accessed later through an article instance using the call `article.getSource().extra`
-
+```javascript
+saffron.on('event', articles => {
+    const extra = articles.getSources().extra;
+    if(extra) {
+        // ...
+    }
+})
+```
 
 ### `url`
-Default value: none
-
 This field contains the url(s) where the news are displayed. It can be a string or an array.:
 
 In case of one url it can be used like:
@@ -101,27 +114,27 @@ url: [
 ]
 ```
 
-If you want to identify in which url an article was found you can use the category option before the url.
-It will add that category alongside the provided url at the `categories` field of the article.
+If you want to identify in which url an article was found you can use the categories option before the url.
+It will add these categories alongside the provided url at the `categories` field of the article.
 
 ```js
 url: [
     ["News", "https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr"],
-    ["Annoucements", "https://www.csd.uoc.gr/index.jsp?content=announcements&openmenu=demoAcc6&lang=gr"]
+    ["Annoucements", "Other category name", "https://www.csd.uoc.gr/index.jsp?content=announcements&openmenu=demoAcc6&lang=gr"]
 ]
 ```
 
 ### `type`
-Default value: none
-
-The type of parser that will be used during the scrapping. For more details read about [parsers](../05_parsers/01_intro.md).
-
+The type of parser that will be used during the scrapping.
+For more details read about [parsers](../05_parsers/01_intro.md).
 
 ### `scrape`
-Default value: none
+This field contains all the scrape options needed by the specified parser.
+You can check the scrape formats for each parser: 
+[WordPress](./02_wordpress.md), [RSS](./03_rss.md), [HTML](./04_html.md) or [Dynamic](./05_dynamic.md).
 
-This field contains all the scrape options needed by the specified parser. You can check the options needed for each parser
-by clicking the parser you want to use: [WordPress](./02_wordpress.md), [RSS](./03_rss.md), [HTML](./04_html.md) or [Dynamic](./05_dynamic.md).
+### `enconding`
+The encoding of the website.
 
 ## Example
 
@@ -134,12 +147,17 @@ by clicking the parser you want to use: [WordPress](./02_wordpress.md), [RSS](./
   "timeout": 10000,
   "amount": 10,
   "ignoreCertificates": false,
-  "extra": {},
+  "extra": {
+      "key": "value",
+      // ...
+  },
   "url":  [
     "https://www.csd.uoc.gr/CSD/index.jsp?content=news&openmenu=demoAcc6&lang=gr",
     "https://www.csd.uoc.gr/index.jsp?content=announcements&openmenu=demoAcc6&lang=gr"
   ],
   "type": "html",
-  "scrape": {}
+  "scrape": {
+      // ...
+  }
 }
 ```

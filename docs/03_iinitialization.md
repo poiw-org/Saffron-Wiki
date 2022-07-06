@@ -14,7 +14,9 @@ you will be able to initialize the server.
 <TabItem value="commonjs" label="CommonJS">
 
 ```js
-const saffron = require("@poiw/saffron");
+const Saffron = require("@poiw/saffron");
+
+const saffron = new Saffron();
 
 (async () => {
     // Initialize saffron
@@ -29,7 +31,9 @@ const saffron = require("@poiw/saffron");
 <TabItem value="esmodules" label="ES modules">
 
 ```js
-import saffron from "@poiw/saffron";
+import Saffron from "@poiw/saffron";
+
+const saffron = new Saffron();
 
 (async () => {
     // Initialize saffron
@@ -44,7 +48,9 @@ import saffron from "@poiw/saffron";
 <TabItem value="typescript" label="TypeScript">
 
 ```ts
-import saffron from "@poiw/saffron";
+import Saffron from "@poiw/saffron";
+
+const saffron = new Saffron();
 
 (async () => {
     // Initialize saffron
