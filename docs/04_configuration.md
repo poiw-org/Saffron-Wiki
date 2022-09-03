@@ -71,6 +71,18 @@ Default value: `120000` (2 minutes)
 The scheduler checks periodically to find if a source scrapping job has finished or failed.
 This option is the interval between these checks. 
 
+### `randomizeInterval`
+Default value: `-500 to 500 seconds`
+
+The scheduler adds/subtracts a random time from the interval of each job to avoid making
+requests at fixed intervals. The result of the function must be in milliseconds.
+
+```javascript
+randomizeInterval: () => {
+    const random = Math.floor(Math.random() * (high - low) + low) * 1000;
+    return Math.random() >= 0.5 ? random : -random;
+}
+```
 
 ## Workers
 

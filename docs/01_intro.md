@@ -31,6 +31,10 @@ as a middleware to connect to the `main` node.
 
 ## Versions
 
+### 3.1.0
+* New features
+  * Added option `randomizeInterval`.
+
 ### 3.0.1
 * Fixes
   * Issue new workers for imported jobs.
