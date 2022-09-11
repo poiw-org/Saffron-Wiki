@@ -31,6 +31,15 @@ as a middleware to connect to the `main` node.
 
 ## Versions
 
+### 3.3.0
+* New features
+  * Added function `resetSources`.
+
+### 3.2.0
+* Changes
+  * Stop flow if database is not set.
+  * Do not re-emit job to the same worker if worker did not respond.
+
 ### 3.1.0
 * New features
   * Added option `randomizeInterval`.
