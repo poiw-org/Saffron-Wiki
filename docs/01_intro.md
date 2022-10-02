@@ -31,6 +31,10 @@ as a middleware to connect to the `main` node.
 
 ## Versions
 
+### 3.4.0
+* New features
+  * Added option `userAgent`.
+
 ### 3.3.0
 * New features
   * Added function `resetSources`.
@@ -80,33 +84,24 @@ as a middleware to connect to the `main` node.
   * Listener `middleware.after` not called on database `none`.
   * Grid will not emit to remote clients unnecessary events.
 
-### 2.2.x
-* Changes
-  * Remodeled WordPress parser.
-* Fixes
-  * WordPress parser did not put url-category at the categories list.
+### 2.x.x
 
-### 2.1.x
-* New features
-  * Allow custom encoding using TextDecoder at axios response.
 * Fixes
   * Dynamic parser missing article id.
   * HTML parser fixed attachment list pushed as one attachment.
-
-### 2.1.0
-* New features
-  * Added event listeners `middleware.before` & `middleware.after`.
-  * Added log levels `info` & `errors`.
-
-### 2.0.0
+  * WordPress parser did not put url-category at the categories list.
 
 * Changes
   * Reformatted configuration fields.
   * Reformatted source fields.
+  * Remodeled WordPress parser.
   
 * New features
   * Added more event listeners
   * Logs can be switched off.
+  * Added event listeners `middleware.before` & `middleware.after`.
+  * Added log levels `info` & `errors`.
+  * Allow custom encoding using TextDecoder at axios response.
 
 
 ### 1.x.x

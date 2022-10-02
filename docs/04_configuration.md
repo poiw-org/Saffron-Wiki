@@ -92,6 +92,9 @@ Default value: `1`
 The worker nodes that will be started with the saffron instance. In case of multiple workers,
 each worker will run on different thread. This is useful in case of a large file of source files.
 
+### `userAgent`
+The User-Agent that will accompany the request.
+
 ### `jobs.timeout`
 Default value: `10000`
 

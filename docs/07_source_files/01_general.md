@@ -128,13 +128,16 @@ url: [
 The type of parser that will be used during the scrapping.
 For more details read about [parsers](../05_parsers/01_intro.md).
 
+### `enconding`
+The encoding of the website.
+
+### `userAgent`
+The User-Agent that will accompany the request.
+
 ### `scrape`
 This field contains all the scrape options needed by the specified parser.
 You can check the scrape formats for each parser: 
 [WordPress](./02_wordpress.md), [RSS](./03_rss.md), [HTML](./04_html.md) or [Dynamic](./05_dynamic.md).
-
-### `enconding`
-The encoding of the website.
 
 ## Example
 
